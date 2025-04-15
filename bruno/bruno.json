@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "batch-request-example",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
