@@ -11,9 +11,6 @@ tasks:
       - dev
     local: true
     toolchain: node
-  drizzle-kit:
-    command: drizzle-kit
-    toolchain: node
   start:
     command:
       - vinxi
