@@ -1,31 +1,50 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { createServerFn } from '@tanstack/react-start'
-import { useCallback } from 'react'
-import { Button } from '~/components/ui/button'
 
 export const Route = createFileRoute('/')({
   component: Home,
-  loader: ({ context: { trpcQueryUtils } }) => {
-    return trpcQueryUtils.greet.ensureData({ name: 'World' })
-  },
 })
 
-const hello = createServerFn({
-  method: 'POST',
-}).handler(() => {
-  return 'Hello World!'
-})
+import { useQuery } from '@tanstack/react-query'
+import { ofetch } from 'ofetch'
+
+interface Product {
+  id: string
+  name: string
+}
+
+function ProductList() {
+  const { data: productList } = useQuery({
+    queryKey: ['products'],
+    queryFn: () => ofetch<{ products: Product[] }>('/api/products'),
+  })
+
+  return (
+    <div>
+      {productList?.products.map((product) => (
+        <Product key={product.id} product={product} />
+      ))}
+    </div>
+  )
+}
+
+function Product({ product }: { product: Product }) {
+  const { data: inStock } = useQuery({
+    queryKey: ['productStock', product.id],
+    queryFn: () => ofetch<{ id: string; amount: number }>(`/api/stocks/${product.id}`),
+  })
+
+  return (
+    <div>
+      <h2>{product.name}</h2>
+      <p>In stock: {inStock?.amount}</p>
+    </div>
+  )
+}
 
 function Home() {
-  const data = Route.useLoaderData()
-  const handleClick = useCallback(async () => {
-    const res = await hello()
-    console.log(res)
-  }, [])
   return (
     <div className="p-2">
-      <h3>{data}</h3>
-      <Button onClick={handleClick}>Click Me!</Button>
+      <ProductList />
     </div>
   )
 }
