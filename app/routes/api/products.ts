@@ -11,7 +11,7 @@ export const APIRoute = createAPIFileRoute('/api/products')({
         10,
         (index): Product => ({
           id: `${index + 1}`,
-          name: faker.lorem.word(),
+          name: faker.commerce.productName(),
         }),
       ),
     })
