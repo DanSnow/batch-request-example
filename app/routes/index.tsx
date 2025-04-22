@@ -15,9 +15,10 @@ function Home() {
     queryFn: () => ofetch<{ products: Product[] }>('/api/products'),
   })
 
-  const productIds = useMemo(() => products?.products.map((product) => product.id), [products])
+  const productIds = useMemo(() => products?.products.map((product) => product.id) ?? [], [products])
   const { data: stocks } = useQuery({
     queryKey: ['stocks', productIds],
+    enabled: productIds.length > 0,
     queryFn: () =>
       ofetch<{ stocks: Stock[] }>('/api/stocks/batch', {
         method: 'post',
