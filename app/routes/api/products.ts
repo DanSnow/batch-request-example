@@ -8,7 +8,7 @@ export const APIRoute = createAPIFileRoute('/api/products')({
     return json({
       products: Array.makeBy(10, (index) => ({
         id: `${index + 1}`,
-        name: faker.lorem.word(),
+        name: faker.commerce.productName(),
       })),
     })
   },
